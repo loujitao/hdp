@@ -1,0 +1,3 @@
+bigdata\hadoop\mapreduce\wcount\WordCount.class
+bigdata\hadoop\mapreduce\wcount\WordcountMapper.class
+bigdata\hadoop\mapreduce\wcount\WordcountReducer.class
