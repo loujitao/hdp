@@ -9,3 +9,7 @@
 *.iml
 /.idea
 .mvn/wrapper/maven-wrapper.jar
+target
+hadoop002.iml
+scalaDemo.iml
+sparkDemo.iml
