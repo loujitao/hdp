@@ -13,8 +13,7 @@ import java.util.List;
  * @Date: 2020/9/910:02
  **/
 public class ZKClient {
-    private static String connectString =
-            "hdp001:2181,hdp002:2181,hdp003:2181";
+    private static String connectString ="hdp001:2181,hdp002:2181,hdp003:2181";
     private static int sessionTimeout = 2000;
     private ZooKeeper zkClient = null;
 
