@@ -77,7 +77,7 @@ select * from emp where sal>1000 or deptno=30;
 #查询除了20部门和30部门以外的员工信息
 select * from emp where deptno not IN(30, 20);
 
-#
+#分组
 #计算emp表每个部门的平均工资
 select t.deptno, avg(t.sal) avg_sal from emp t group by t.deptno;
 select deptno, avg( sal) as avg_sal from emp  group by  deptno;
