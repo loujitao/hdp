@@ -1,0 +1,41 @@
+#数据内容   dept.txt
+10	ACCOUNTING	1700
+20	RESEARCH	1800
+30	SALES	1900
+40	OPERATIONS	1700
+
+
+#========================操作命令==================
+#创建分区表
+create table dept_partition(deptno int, dname string, loc string)partitioned by (month  string)row format delimited fields terminated by '\t';
+
+#加载数据到分区
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/dept.txt' into table  db_test.dept_partition partition(month='202012');
+
+#增加分区
+ alter table dept_partition add partition(month='202012') ;
+ #删除分区
+ alter table dept_partition drop partition (month='202012');
+
+
+
+
+#创建二级分区表
+create table dept_partition2(deptno int, dname string, loc string)partitioned by (month  string, day string)row format delimited fields terminated by '\t';
+
+#加载数据到分区
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/dept.txt' into table
+ db_test.dept_partition2 partition(month='201709', day='13');
+
+#将文件直接上传到分区目录，解决查询不到问题
+1）创建分区目录
+dfs -mkdir -p /user/hive/warehouse/db_test.db/dept_partition2/month=201709/day=12;
+
+2)上传数据到该目录
+dfs -put /home/hadoop/hdp2/hive-1.2.1/mytestdata/dept.txt  /user/hive/warehouse/db_test.db/dept_partition2/month=201709/day=12;
+
+3）查询（查询不到数据）
+select * from dept_partition2 where month='201709' and day='12';
+
+4）修复方式，再次查询验证
+msck repair table dept_partition2;

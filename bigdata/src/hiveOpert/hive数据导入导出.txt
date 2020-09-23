@@ -1,0 +1,17 @@
+#====load  insert导入导出=====
+#导入数据
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/student.txt' into table  db_test.student [ partition(month='202012') ];
+
+#导出数据到本地     local关键词代表本地目录，会跑MapReduce程序
+insert overwrite local directory '/home/hadoop/student' select * from student;
+
+#导出到本地，加格式化
+insert overwrite local directory '/home/hadoop/student1' ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' select * from student;
+
+#======= export  import导入导出===========
+#		export和import主要用于两个Hadoop平台集群之间Hive表迁移。
+#Export导出到HDFS上
+export table db_test.student to '/user/hive/warehouse/export/student';
+
+#Import数据到指定Hive表中
+import table student2 partition(month='201709') from '/user/hive/warehouse/export/student';
