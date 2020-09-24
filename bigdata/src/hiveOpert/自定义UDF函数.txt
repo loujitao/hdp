@@ -1,0 +1,15 @@
+1、创建一个maven项目，写一个class类继承UDF或者UDAF接口
+        public class Lower extends UDF {
+
+2、重新evaluate方法
+    public String evaluate (final String s) {
+
+
+1)将jar包添加到hive的classpath
+hive> add jar /opt/module/datas/udf.jar;
+
+2)创建临时函数与开发好的java class关联
+hive> create temporary function mylower as "com.atguigu.hive.Lower";
+
+3)即可在hql中使用自定义的函数strip 
+hive> select ename, mylower(ename) lowername from emp;
