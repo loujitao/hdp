@@ -1,0 +1,64 @@
+查看详情
+	库：
+		desc database  [extended] 库名;
+	表：
+		desc [formatted] 表名;
+
+
+一、建表
+ 1）管理表
+create table a(id int,name string)
+row format delimited fields terminated by ',';
+
+2）外部表 external
+create  external  table b(id int,name string)
+row format delimited fields terminated by ',';
+
+3）like关键字建表
+create external table student_ext like student;
+
+4）将查询结果保存到一张新的hive表中
+create table t_tmp
+as
+select * from t_p;
+
+建表时的各种分隔方式
+示例：
+	create table test(
+	name string,
+	friends array<string>,
+	children map<string, int>,
+	address struct<street:string, city:string>
+	)
+	row format delimited fields terminated by ','
+	collection items terminated by '_'
+	map keys terminated by ':'
+	lines terminated by '\n';
+说明：
+	row format delimited fields terminated by ','    -- 列分隔符
+	collection items terminated by '_'  	 --MAP STRUCT 和 ARRAY 的分隔符(数据分割符号)
+	map keys terminated by ':'				 -- MAP中的key与value的分隔符
+	lines terminated by '\n';					-- 行分隔符
+
+二、导入数据：
+load data local inpath '/home/hadoop/a.txt' into table a;
+
+
+三、保存select查询结果的几种方式：
+1、将查询结果保存到一张新的hive表中
+create table t_tmp
+as
+select * from t_p;
+
+2、将查询结果保存到一张已经存在的hive表中
+insert into  table t_tmp
+select * from t_p;
+
+3、将查询结果保存到指定的文件目录（可以是本地，也可以是hdfs）
+insert overwrite local directory '/home/hadoop/test'
+select * from t_p;
+
+hdfs文件目录
+insert overwrite directory '/aaa/test'
+select * from t_p;
+
