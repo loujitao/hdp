@@ -1,0 +1,183 @@
+#================ =========================
+#        NVL：给值为NULL的数据赋值，它的格式是NVL( value，default_value)。
+
+#如果员工的comm为NULL，则用-1代替
+select comm,nvl(comm, -1) from emp;
+
+#如果员工的comm为NULL，则用领导id代替
+select comm, nvl(comm,mgr) from emp;
+
+#		CASE WHEN
+#========准备数据 emp_sex.txt=======
+悟空	A	男
+大海	A	男
+宋宋	B	男
+凤姐	A	女
+婷姐	B	女
+婷婷	B	女
+
+#创建表
+create table emp_sex(name string, dept_id string,sex string) row format delimited fields terminated by "\t";
+
+#加载数据
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/emp_sex.txt' into table emp_sex;
+
+#需求： 求出不同部门男女各多少人。
+select
+  dept_id,
+  sum(case sex when '男' then 1 else 0 end) male_count,
+  sum(case sex when '女' then 1 else 0 end) female_count
+from
+  emp_sex
+group by
+  dept_id;
+
+
+#=======  行转列  =============
+#	CONCAT(string A/col, string B/col…)：返回输入字符串连接后的结果，支持任意个输入字符串;
+#	CONCAT_WS(separator, str1, str2,...)：它是一个特殊形式的 CONCAT()。第一个参数剩余参数间的分隔符。
+#	COLLECT_SET(col)：函数只接受基本数据类型，它的主要作用是将某字段的值进行去重汇总，产生array类型字段。
+
+#数据准备   conste.txt
+孙悟空	白羊座	A
+大海	射手座	A
+宋宋	白羊座	B
+猪八戒	白羊座	A
+凤姐	射手座	A
+
+#创建表
+create table person_info(
+name string,
+constellation string,
+blood_type string)
+row format delimited fields terminated by "\t";
+
+#导入数据
+load data local inpath "/home/hadoop/hdp2/hive-1.2.1/mytestdata/conste.txt" into table person_info;
+
+#需求： 把星座和血型一样的人归类到一起。
+select
+    t1.base,
+    concat_ws('|', collect_set(t1.name)) name
+from
+    (select
+        name,
+        concat(constellation, ",", blood_type) base
+    from
+        person_info) t1
+group by
+    t1.base;
+
+
+
+#=======  列转行  =============
+#	EXPLODE(col)：将hive一列中复杂的array或者map结构拆分成多行。
+#	LATERAL VIEW udtf(expression) tableAlias AS columnAlias 	用于和split, explode等UDTF一起使用，它能够将一列数据拆成多行数据，在此基础上可以对拆分后的数据进行聚合。
+
+# 数据准备  movie.txt
+《疑犯追踪》	悬疑,动作,科幻,剧情
+《Lie to me》	悬疑,警匪,动作,心理,剧情
+《战狼2》	战争,动作,灾难
+
+#建表
+create table movie_info(
+    movie string,
+    category array<string>)
+row format delimited fields terminated by "\t"
+collection items terminated by ",";
+
+#导入数据
+load data local inpath "/home/hadoop/hdp2/hive-1.2.1/mytestdata/movie.txt" into table movie_info;
+
+#需求：  将电影分类中的数组数据展开
+select
+    movie,
+    category_name
+from
+    movie_info lateral view explode(category) table_tmp as category_name;
+
+
+#=======  窗口函数（开窗函数）  =============
+#数据准备
+jack,2017-01-01,10
+tony,2017-01-02,15
+jack,2017-02-03,23
+tony,2017-01-04,29
+jack,2017-01-05,46
+jack,2017-04-06,42
+tony,2017-01-07,50
+jack,2017-01-08,55
+mart,2017-04-08,62
+mart,2017-04-09,68
+neil,2017-05-10,12
+mart,2017-04-11,75
+neil,2017-06-12,80
+mart,2017-04-13,94
+
+#建表
+create table business(
+name string,
+orderdate string,
+cost int
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+#加载数据
+load data local inpath "/home/hadoop/hdp2/hive-1.2.1/mytestdata/business.txt" into table business;
+
+#需求： 查询在2017年4月份购买过的顾客及总人数
+select name,count(*) over ()
+from business
+where substring(orderdate,1,7) = '2017-04'
+group by name;
+
+#需求： 查询顾客的购买明细及月购买总额
+select name,orderdate,cost,sum(cost) over(partition by month(orderdate)) from business;
+
+
+
+
+#============  RANK   ================
+#	RANK() 排序相同时会重复，总数不会变
+#	DENSE_RANK() 排序相同时会重复，总数会减少
+#	ROW_NUMBER() 会根据顺序计算
+
+#数据准备
+孙悟空	语文	87
+孙悟空	数学	95
+孙悟空	英语	68
+大海	语文	94
+大海	数学	56
+大海	英语	84
+宋宋	语文	64
+宋宋	数学	86
+宋宋	英语	84
+婷婷	语文	65
+婷婷	数学	85
+婷婷	英语	78
+
+#建表
+create table score(
+name string,
+subject string,
+score int)
+row format delimited fields terminated by "\t";
+
+#导入数据
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/score.txt' into table score;
+
+#需求： 计算每门学科成绩排名
+select name,
+subject,
+score,
+rank() over(partition by subject order by score desc) rp,
+dense_rank() over(partition by subject order by score desc) drp,
+row_number() over(partition by subject order by score desc) rmp
+from score;
+
+
+#求出每门学科前三名的学生？
+select a.* from	(select subject, name,  score, rank() over(partition by subject order by score desc) rp  from score	)a where a.rp<=3;
+
+#		row_number() over()分组排序功能：
+#		在使用 row_number() over()函数时候，over()里头的分组以及排序的执行晚于 where group by  order by 的执行。
+select a.* from	(select subject, name,  score, row_number() over(partition by subject order by score desc) rp  from score	)a where a.rp<=3;

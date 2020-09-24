@@ -77,10 +77,68 @@ select * from emp where sal>1000 or deptno=30;
 #查询除了20部门和30部门以外的员工信息
 select * from emp where deptno not IN(30, 20);
 
-#分组
+#=============分组
 #计算emp表每个部门的平均工资
 select t.deptno, avg(t.sal) avg_sal from emp t group by t.deptno;
 select deptno, avg( sal) as avg_sal from emp  group by  deptno;
 
 #计算emp每个部门中每个岗位的最高薪水
 select t.deptno, t.job, max(t.sal) max_sal from emp t group by t.deptno, t.job;
+
+# 求部门的平均薪水大于2000的部门
+select deptno, avg(sal) avg_sal from emp group by deptno ;
+select deptno, avg(sal) avg_sal from emp group by deptno having avg_sal > 2000;
+
+#根据员工表和部门表中的部门编号相等，查询员工编号、员工名称和部门名称；
+select e.empno, e.ename, d.deptno, d.dname from emp e join dept d on e.deptno = d.deptno;
+
+#=============join
+#内连接：只有进行连接的两个表中都存在与连接条件相匹配的数据才会被保留下来。
+select e.empno, e.ename, d.deptno from emp e join dept d on e.deptno = d.deptno;
+
+#左外连接：JOIN操作符左边表中符合WHERE子句的所有记录将会被返回。
+select e.empno, e.ename, d.deptno from emp e left join dept d on e.deptno = d.deptno;
+
+#右外连接：JOIN操作符右边表中符合WHERE子句的所有记录将会被返回。
+ select e.empno, e.ename, d.deptno from emp e right join dept d on e.deptno = d.deptno;
+
+#满外连接：将会返回所有表中符合WHERE语句条件的所有记录。
+#如果任一表的指定字段没有符合条件的值的话，那么就使用NULL值替代。
+select e.empno, e.ename, d.deptno from emp e full join dept d on e.deptno = d.deptno;
+
+#位置表数据
+1700	Beijing
+1800	London
+1900	Tokyo
+
+#建表
+ create table if not exists location(loc int,loc_name string)row format delimited fields terminated by '\t';
+
+#加载数据
+load data local inpath '/home/hadoop/hdp2/hive-1.2.1/mytestdata/location.txt' into table location;
+
+#多表连接
+SELECT e.ename, d.dname, l.loc_name FROM emp e JOIN dept d ON d.deptno = e.deptno JOIN location l ON d.loc = l.loc;
+
+#========排序
+#查询员工信息按工资升序排列   							order by 只有一个reduce，全局排序
+select * from emp order by sal;
+
+#查询员工信息按工资降序排列
+select * from emp order by sal desc;
+
+#按照员工薪水的2倍排序
+select ename, sal*2 twosal from emp order by twosal;
+
+#按照部门和工资升序排序
+select ename, deptno, sal from emp order by deptno, sal ;
+
+#根据部门编号降序查看员工信息							sort by 分区内排序，组内有序
+select * from emp sort by deptno desc;
+
+#先按照部门编号分区，再按照员工编号降序排序。				distribute by 分区
+#-------Hive要求DISTRIBUTE BY语句要写在SORT BY语句之前
+select * from emp distribute by deptno sort by empno desc;
+
+#当distribute by和sorts by字段相同时，可以使用cluster by方式。
+select * from emp cluster by deptno;
