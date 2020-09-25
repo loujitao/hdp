@@ -1,0 +1,18 @@
+1)使用 order by（小数据量时使用）
+select
+    字段1，字段2，字段3，字段4，字段5
+from
+    表名
+order by
+    字段X（全局排序字段）
+desc limit
+    10;
+
+
+2)使用Rank() over或者row_number() over函数
+select a.* from	(
+    select
+        subject, name,  score, rank() over(partition by subject order by score desc) rp
+    from score	)a
+where a.rp<=10;
+
