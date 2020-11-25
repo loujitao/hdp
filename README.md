@@ -40,3 +40,5 @@
 #### zookeeperDemo
     zk API相关代码
         
+### aclRecommend
+    基于ALS的电影推荐系统模块        
