@@ -35,13 +35,12 @@ public class AddLogInterceptor implements Interceptor {
          */
         @Override
         public Event intercept(Event event) {
-//            byte[] eventBody = event.getBody();
-//            String data=new String(eventBody);
-//            String[] arrs = data.split("\t");
-//            header.put("dataType",arrs[0]);
-
-            header.put("dataType","logs");
-            event.setHeaders(header);
+//            if('1'<=event.getBody()[0]&&event.getBody()[0]<='9'){
+//                event.getHeaders().put("topic","number");
+//            }else if('a'<=event.getBody()[0]&&event.getBody()[0]<='z'){
+//                event.getHeaders().put("topic","letter");
+//            }
+            event.getHeaders().put("dataType","logs");
             return event;
         }
         // 接收被过滤事件集合
