@@ -48,4 +48,12 @@ object func2Demo  extends App{
   }
   println(fun7(1,2)(3,4))
 
+  //隐式参数传入
+  implicit val a = 10
+  def fun8(b:Int)(implicit a:Int): Int ={
+    b + a
+  }
+  println(fun8(9))
+
+
 }
