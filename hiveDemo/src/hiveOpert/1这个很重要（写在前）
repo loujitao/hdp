@@ -1,0 +1,35 @@
+大部分数据（仓）库，都遵循标准SQL语法，至少在一些关键字和内置函数写法（用法）上有些差别
+
+(8)     SELECT
+(9)     DISTINCT <select_list>
+(6)     聚合函数(select_column)
+(1)     FROM <left_table>
+(3)     <join_type> JOIN <right_table>
+(2)     ON <join_condition> (关联条件)
+(4)     WHERE <where_condition>  (过滤条件)
+(5)     GROUP BY <group_by_list> (分组条件)
+(7)     HAVING <having_condition> (分组过滤条件)
+(10)    ORDER BY <order_by_condition> (排序条件)
+(11)    LIMIT <limit_number>
+
+一、书写顺序
+查询中用到的关键词主要包含六个，并且他们的顺序依次为
+select-- （聚合函数、case when、窗口函数）--from--where--group by--having--order by---limit
+
+其中select和from是必须的，其他关键词是可选的
+
+
+
+二、执行顺序
+与sql语句的书写顺序并不是一样的，而是按照下面的顺序来执行
+from--where--group by（聚合函数）--having--select--order by,
+
+from:需要从哪个数据表检索数据
+where:过滤表中数据的条件
+group by:如何将上面过滤出的数据分组
+having:对上面已经分组的数据进行过滤的条件
+select:查看结果集中的哪个列，或列的计算结果
+order by :按照什么样的顺序来查看返回的数据
+
+
+
