@@ -2,7 +2,6 @@ package com.steve.core.extDemo
 
 import java.util
 
-import org.apache.spark.rdd.RDD
 import org.apache.spark.util.AccumulatorV2
 import org.apache.spark.{Accumulator, SparkConf, SparkContext}
 
@@ -19,7 +18,7 @@ class LogAccumulator extends org.apache.spark.util.AccumulatorV2[String, java.ut
     _logArray.isEmpty
   }
 
-  override def copy(): AccumulatorV2[String, util.Set[String]] = {
+  override def copy(): AccumulatorV2[String, java.util.Set[String]] = {
     val newAcc = new LogAccumulator()
     _logArray.synchronized{
       newAcc._logArray.addAll(_logArray)
@@ -35,13 +34,13 @@ class LogAccumulator extends org.apache.spark.util.AccumulatorV2[String, java.ut
     _logArray.add(v)
   }
 
-  override def merge(other: AccumulatorV2[String, util.Set[String]]): Unit = {
+  override def merge(other: AccumulatorV2[String, java.util.Set[String]]): Unit = {
     other match {
       case o: LogAccumulator => _logArray.addAll(o.value)
     }
   }
 
-  override def value: util.Set[String] = {
+  override def value: java.util.Set[String] = {
     java.util.Collections.unmodifiableSet(_logArray)
   }
 
@@ -61,7 +60,7 @@ object Chap03_defAccum {
     sc.register(accum, "logAccum")
 
     // 过滤掉带字母的
-    val sum = sc.parallelize(Array("1", "2a", "3", "4b", "5", "6", "7cd", "8", "9"), 2).filter(line => {
+    val sum = sc.parallelize(Array("1222", "2a", "a3", "4b", "533", "6", "7cd", "18", "9"), 2).filter(line => {
       val pattern = """^-?(\d+)"""
       val flag = line.matches(pattern)
         if (!flag) {
@@ -70,9 +69,9 @@ object Chap03_defAccum {
         flag
     }).map(_.toInt).reduce(_ + _)
 
+    import scala.collection.JavaConversions._
     println("sum: " + sum)
-    val set= accum.value
-    set.foreach { println }
+    for (v <- accum.value) print(v + " : ")
     sc.stop()
   }
 
