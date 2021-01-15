@@ -98,7 +98,6 @@ public class HdfsClient {
                     System.out.println(host);
                 }
             }
-            System.out.println("-----------班长的分割线----------");
         }
         // 3 关闭资源
         fs.close();

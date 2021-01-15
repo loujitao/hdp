@@ -4,7 +4,12 @@
 #### bigdata
     kafka生产者和消费者代码，拦截器代码
     storm的wordCount案例等
- 
+    hadoop的MR等：
+     1) hdfsAPI
+     2) MR案例    
+     3）topN问题
+     4） map Join和Reduce Join问题
+     
 ### clickHouse
     jdbc 方式连接clickhouse数据库，实现插入和查找；
     spark操作clickHouse库；
@@ -13,12 +18,6 @@
     1）自定义source
     2）自定义sink
     3)自定义拦截器（数据初步筛选到kafka的不同topic）
-
-#### hadoop002
-    1) hdfsAPI
-    2) MR案例    
-    3）topN问题
-    4） map Join和Reduce Join问题
 
 #### hbaseDemo
     1）Java API的增删改查

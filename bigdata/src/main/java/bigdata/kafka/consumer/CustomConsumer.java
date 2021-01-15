@@ -9,7 +9,14 @@ import java.util.Arrays;
 import java.util.Properties;
 
 /**
- * @Description: TODO
+ * @Description: TODO 方式一、subscribe()
+ *                      方式二、assign()+seek()
+ *   场景：
+ *      1、怎么保证精准一次性消费；不丢失、不重复
+ *      2、怎么重复消费某条信息？
+ *      3、怎么提高消费速度？
+ *      4、优化参数
+ *
  * @Author: SteveTao
  * @Date: 2020/3/422:05
  **/
