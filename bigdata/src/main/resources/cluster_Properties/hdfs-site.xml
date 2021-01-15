@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!-- 指定HDFS副本的数量 -->
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+
+    <!-- 指定Hadoop辅助名称节点主机配置 -->
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>hadoop104:50090</value>
+    </property>
+
+
+</configuration>
+

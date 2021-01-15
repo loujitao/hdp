@@ -1,0 +1,12 @@
+集群第一次启动，需要格式化NameNode
+       bin/hdfs namenode -format
+
+启动NameNode
+      hadoop-daemon.sh start namenode
+
+分别启动DataNode
+       hadoop-daemon.sh start datanode
+
+
+====================
+

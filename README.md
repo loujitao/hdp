@@ -4,6 +4,10 @@
 #### bigdata
     kafka生产者和消费者代码，拦截器代码
     storm的wordCount案例等
+ 
+### clickHouse
+    jdbc 方式连接clickhouse数据库，实现插入和查找；
+    spark操作clickHouse库；
      
 #### flumeDemo
     1）自定义source
@@ -15,6 +19,10 @@
     2) MR案例    
     3）topN问题
     4） map Join和Reduce Join问题
+
+#### hbaseDemo
+    1）Java API的增删改查
+    2）过滤器
 
 #### hiveDemo
     1) UDF UDAF函数编写
