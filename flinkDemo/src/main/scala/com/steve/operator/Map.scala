@@ -1,9 +1,9 @@
-package com.steve.demo
+package com.steve.operator
 
 import org.apache.flink.api.scala.{AggregateDataSet, DataSet, ExecutionEnvironment}
 
 //批处理
-object WordCount1 {
+object Map {
 
   def main(args: Array[String]): Unit = {
 
@@ -21,10 +21,6 @@ object WordCount1 {
     // 打印
     aggDs.print()
 
-//    aggDs.setParallelism(1)
-//    System.setProperty("HADOOP_USER_NAME", "root")
-//    aggDs.writeAsText("file:///e:/temp/output")
-//    env.execute()
 
   }
 

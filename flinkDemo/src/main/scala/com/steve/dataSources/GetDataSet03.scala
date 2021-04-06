@@ -1,12 +1,16 @@
-package com.steve.demo
+package com.steve.dataSources
 
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
-import org.apache.flink.streaming.api.windowing.time.Time
 
 //流处理
-object WordCount2 {
+object GetDataSet03 {
 
+  /**
+    *   基于socket流创建Data Source
+    *
+    * @param args
+    */
   def main(args: Array[String]): Unit = {
     //从外部命令中获取参数
     val tool: ParameterTool = ParameterTool.fromArgs(args)
